@@ -1,0 +1,12 @@
+{
+    "BASE_NAME": "20230502_liver_seg_v5_nnUnet_3phase",
+    "DATASET_JSON": "/neodata/hsu/liver_clara/liver_seg/datalist/ntuh_liver_tumor_multi.json",
+    "DATA_ROOT": "/data2/",
+    "PROCESSING_TASK": "segmentation_nnunet",
+    "MMAR_EVAL_OUTPUT_PATH": "/neodata/hsu/liver_clara/liver_seg/eval_3/",
+    "MMAR_CKPT_DIR": "/neodata/hsu/liver_clara/liver_seg/models/_failed_",
+    "MMAR_CKPT_DIR_COMPLETE": "/neodata/hsu/liver_clara/liver_seg/models/",
+    "MMAR_CKPT": "/neodata/hsu/liver_clara/liver_seg/models/_failed_20230418_liver_seg_v5_with_tcia_pv_nnUnet_SGD/val_checkpoint_key_metric_67=0.3735.pt",
+    "MMAR_TORCHSCRIPT": "/neodata/hsu/liver_clara/liver_seg/models/20211022bmvae_checkpoint/model.ts"
+}
+

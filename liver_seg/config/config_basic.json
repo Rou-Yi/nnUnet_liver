@@ -1,0 +1,105 @@
+{
+  "////////////////////////////////": "more or less won't change ever",
+  "num_interval_per_valid": 1,
+  "amsgrad": true,
+  "multi_gpu": true,
+  "amp": true,
+  "cudnn_benchmark": false,
+  "determinism": {
+    "random_seed": 10832
+  },
+  
+  "////////////////////////////////": "tunable parameters",
+  "optimizer_name": "@SGD",
+  "learning_rate": 1e-4,
+  "weight_decay": 1e-4,
+  "epochs": 300,
+
+  "////////////////////////////////": "change if memory not enough",
+  "x_size": 128,
+  "y_size": 128,
+  "z_size": 128,
+  "x_spacing": 0.5,
+  "y_spacing": 0.5,
+  "z_spacing": 5,
+  "train_batch_size": 4,
+  "val_batch_size": 1,
+  "num_samples": 3,
+
+  "////////////////////////////////": "set single or multiple channel; accepted values are 'single' or 'multi'",
+  "single_or_multi": "single",
+  "intensity_threshold": 1,
+
+  "////////////////////////////////": "transforms, making assumption here that extra keys also use nearest interpolation, like label_keys, while image_keys uses bilinear interpolation, which may not be best fit",
+  "mask_image": false,
+  "dont_mask": true,
+  "crop_margin": 5,
+  "image_keys": ["PC", "AP", "PV"],
+  "label_keys": ["liver"],
+  "extra_keys": [],
+  "gt": "label",
+  "image_type": "ct",
+  "a_min": -89.0,
+  "a_max": 134.0,
+  "mean_intensity": 61.887040582124506,
+  "std_intensity": 36.36520724353485,
+
+  "////////////////////////////////": "metrics",
+  "surface_dice_threshold": [2.5603],
+  "surface_dice_95_threshold": [4.00093],
+
+  "////////////////////////////////": "losses",
+  "loss_losses": ["@DS_dice_ce_loss"],
+  "loss_weights": [1],
+  "loss_need_extras": [false],
+  "loss_need_epochs": [false],
+  "loss_need_masks": [false],
+  "deep_sup_losses": [true],
+
+  "////////////////////////////////": "datasets",
+  "dataset_file": ["{DATASET_JSON}"],
+  "DATASET_JSON": {
+	},
+  "data_root_dir": "/neodata/hsu/liver",
+  "train_data_list_key": ["training"],
+  "val_data_list_key": ["validation"],
+  "cache_rate": 0,
+  "factor": 1,
+  "num_workers": 0,
+
+  "////////////////////////////////": "models, out_channels is the num of classes",
+  "model1": {
+    "path": "DynUNet",
+    "args": {
+        "in_channels": 3,
+        "out_channels": 2,
+        "spatial_dims": 3,
+        "strides":[[1, 1, 1], [2, 2, 2], [2, 2, 2], [2, 2, 2], [2, 2, 2], [2, 2, 2]],
+        "kernel_size":[[3, 3, 3], [3, 3, 3], [3, 3, 3], [3, 3, 3], [3, 3, 3], [3, 3, 3]],
+        "upsample_kernel_size":[[2, 2, 2], [2, 2, 2], [2, 2, 2], [2, 2, 2], [2, 2, 2]],
+        "deep_supervision": true, 
+        "deep_supr_num": 2, 
+        "res_block": false
+     }
+  },
+  "dont_load_ckpt_model": true,
+
+  "////////////////////////////////": "postfixes, start from postfix1; number have to increase by 1 each time, i.e. postfix1, postfix2, postfix3, only include the postfixes you want - should correspond with model out_channel number",
+  "postfix1": "background",
+  "postfix2": "liver",
+  "dont_save_segmentation": false,
+
+  "////////////////////////////////": "trainers, extra stuff",
+  "to_cascade": false,
+  "has_vae": false,
+  "has_simclr": false,
+  "ndimaged_label": false,
+  "ndimaged_label_and_weight": false,
+
+  "////////////////////////////////": "inference, specifically for ensemble, ensemble_method accepts null, mean, or vote",
+  "ensemble_method": "null",
+  "pred_keys": ["pred0"],
+  "pred_meta_keys": ["pred0_meta_dict"],
+  "networks": ["@model1"],
+  "model_paths": ["{MMAR_CKPT}"]
+}
