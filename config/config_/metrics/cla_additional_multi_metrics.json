@@ -1,0 +1,15 @@
+{
+    "train": {
+  "additional_metrics": [
+      {
+        "path": "metrics.torcheval_metrics_auroc.TorchEvalMetricMultiAUROC",
+        "log_label": "train_auc_multi",
+        "args": {
+          "num_classes": "{out_channels1}",
+          "output_transform": "#monai.handlers.from_engine(['pred', 'label'])",
+          "device": "@device"
+        }
+      }
+  ]
+}
+}

@@ -1,0 +1,12 @@
+{
+    "pre_transforms": [
+    {
+        "name": "NormalizeIntensityd",
+        "args": {
+          "keys": "image",
+	      "nonzero": true,
+          "channel_wise": true
+        }
+      }
+    ]
+}

@@ -1,0 +1,41 @@
+{
+   "handlers": [
+    {
+      "name": "CheckpointLoader",
+      "disabled": "{dont_load_ckpt_model}",
+      "args": {
+        "load_path": "{MMAR_CKPT}",
+	"strict": true,
+        "load_dict": {
+          "model": "@model"
+        }
+      }
+    },
+    {
+      "name": "StatsHandler",
+      "rank": 0,
+      "args": {
+        "output_transform": "lambda x: None"
+      }
+    },
+    {
+      "path": "handlers.metrics_saver_confusion_matrix.MetricsSaver",
+      "args": {
+        "save_dir": "{MMAR_EVAL_OUTPUT_PATH}",
+        "metrics": "*",
+	    "metric_details": "*",
+        "batch_transform": "#monai.handlers.from_engine(['image_meta_dict'])",
+        "summary_ops": "*",
+        "save_rank": 0
+      }
+    },
+    {
+	"path": "handlers.confirm_success.ConfirmSuccess",
+        "rank": 0,
+	"args": {
+	    "ori_dir": "{MMAR_EVAL_OUTPUT_PATH}",
+	    "dest_dir": "{MMAR_EVAL_OUTPUT_PATH}"
+	}
+      }
+  ]
+}

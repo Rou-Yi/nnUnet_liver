@@ -1,0 +1,16 @@
+{
+    "simple_inferer": {
+      "name": "SimpleInferer",
+      "args": {
+      }
+    },
+    "sliding_window_inferer": {
+      "name": "SlidingWindowInferer",
+      "args": {
+         "roi_size": ["{x_size}", "{y_size}", "{z_size}"],
+         "sw_batch_size": "{val_batch_size}",
+         "overlap": 0.6,
+         "mode":"gaussian"
+      }
+    }
+}

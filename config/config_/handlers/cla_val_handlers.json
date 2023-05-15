@@ -1,0 +1,74 @@
+{
+    "validate": {
+    "handlers": [
+        {
+        "path": "handlers.earlystop_handler.MyEarlyStopHandler",
+        "args": {
+            "patience": 10,
+            "score_function": "lambda x: x.state.metrics['val_acc']"
+        }
+      },
+        {
+      "name": "CheckpointLoader",
+      "disabled": "{dont_load_ckpt_model}",
+      "args": {
+        "load_path": "{MMAR_CKPT}",
+        "load_dict": {"model": "@model"}
+      }
+    },
+    {
+      "name": "StatsHandler",
+      "rank": 0,
+      "args": {
+        "output_transform": "lambda x: None"
+      }
+    },
+     {
+        "name": "TensorBoardStatsHandler",
+        "rank": 0,
+        "args": {
+          "log_dir": "{MMAR_CKPT_DIR}",
+          "output_transform": "lambda x: None"
+        }
+      },
+    {
+      "name": "ClassificationSaver",
+      "args": {
+        "output_dir": "{MMAR_EVAL_OUTPUT_PATH}",
+        "batch_transform": "#monai.handlers.from_engine(['image_meta_dict'])",
+        "output_transform": "#monai.handlers.from_engine(['pred'])"
+      }
+    },
+    {
+      "name": "MetricsSaver",
+      "args": {
+        "save_dir": "{MMAR_EVAL_OUTPUT_PATH}",
+        "metrics": ["val_acc", "val_auc"],
+        "batch_transform": "#monai.handlers.from_engine(['image_meta_dict'])",
+        "summary_ops": "*",
+        "save_rank": 0
+      }
+    },
+    {
+        "path": "handlers.epoch_checkpoint_saver.EpochCheckpointSaver",
+        "rank": 0,
+        "args": {
+          "save_dir": "{MMAR_CKPT_DIR}",
+          "save_dict": {
+		  "model": "@model", 
+		  "optimizer": "@optimizer", 
+		  "lr_scheduler": "@lr_scheduler",
+		  "train_conf": "@conf"
+	  },
+	  "save_final": true,
+          "save_interval": 50,
+	  "file_prefix": "val",
+          "save_key_metric": true,
+	  "key_metric_filename": null,
+	  "key_metric_n_saved": 5,
+	  "key_metric_save_state": true
+        }
+      }
+  ]
+}
+}  

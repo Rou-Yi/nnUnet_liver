@@ -1,0 +1,17 @@
+{
+   "pre_transforms": [
+      {
+        "name": "ToNumpyd",
+        "args": {
+          "keys": "@label_keys"
+        }
+      },
+      {
+        "name": "CastToTypeDict",
+        "args": {
+          "keys": "@label_keys",
+          "dtype": "float32"
+        }
+      }
+   ]
+}

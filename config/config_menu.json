@@ -1,0 +1,78 @@
+{
+	"##############": "settings that change every experiment",
+	"basic": "base/config_basic.json",
+	"##############": "set datalist, experiment name, choose classification, segmentation",
+	"envjson": "base/environment.json",
+	"##############":"basic train/infenre",
+    "train_conf": "config/config_train.json",
+    "test_conf": "config/config_inference.json",
+
+	"##############":"",
+	"##############": "following are things that are different between classification and segmentation",
+	"classification": {
+		"inferer": "simple_inferer",
+		"key_metric": "config/config_/metrics/cla_key_${single_or_multi}_metric.json",
+		"train_additional_metrics": "config/config_/metrics/cla_additional_${single_or_multi}_metrics.json",
+		"val_additional_metrics": "config/config_/metrics/cla_val_additional_${single_or_multi}_metrics.json",
+		"test_additional_metrics": "config/config_/metrics/cla_test_additional_${single_or_multi}_metrics.json",
+        "train_handlers": "config/config_/handlers/train_handlers.json",
+        "val_handlers": "config/config_/handlers/cla_val_handlers.json",
+        "test_handlers": "config/config_/handlers/cla_test_handlers.json",
+        "#############": "the cla_test_additional_metrics.json should come from cla_additional_metrics.json",
+		"pre_transforms": {
+			"cla_load_image.json": true,
+			"${image_type}_intensity.json": true,
+            "mask_with_extra.json": "${mask_image}",
+			"label_to_extra.json": "${generate_extra}",
+			"cla_end_transforms.json": true,
+            "3d_to_2d.json": "${to_2d}"
+		},
+		"post_transforms": "config/config_/transforms/cla_post_trans.json"
+	},
+	"segmentation": {
+		"inferer": "sliding_window_inferer",
+    	"key_metric": "config/config_/metrics/seg_key_metric.json",
+		"train_additional_metrics": "config/config_/metrics/train_additional_metrics.json",
+		"val_additional_metrics": "config/config_/metrics/val_additional_metrics.json",
+		"test_additional_metrics": "config/config_/metrics/test_additional_metrics.json",
+        "train_handlers": "config/config_/handlers/train_handlers.json",
+        "val_handlers": "config/config_/handlers/val_handlers.json",
+        "test_handlers": "config/config_/handlers/test_handlers.json",
+        "split_postfixes_train_metrics": "config/config_/metrics/dice_train_metric.json",
+        "split_postfixes_val_metrics": "config/config_/metrics/dice_val_metric.json",
+        "##########": "two things, first the train_additional, val_additional, and test_additional of additional_metrics should become one;;;; also, have to account for vote cases and mean ensemble cases, and not deal with that in commands files;;;; also, have to account for the multiple dice_train_metrics here",
+		"pre_transforms": {
+			"load_image_no_label.json": true,
+            "load_image_label_handle.json": "${has_label}",
+			"${image_type}_intensity.json": true,
+            "mask_with_extra.json": "${mask_image}",
+			"label_to_extra.json": "${generate_extra}",
+            "select_itemsd.json": true,
+			"end_transforms.json": true,
+            "3d_to_2d.json": "${to_2d}"
+		},
+		"post_transforms": "config/config_/transforms/post_trans.json"
+	},
+	"segmentation_nnunet": {
+		"inferer": "sliding_window_inferer",
+		"key_metric": "config/config_/metrics/seg_key_metric.json",
+		"train_additional_metrics": "config/config_/metrics/train_additional_metrics.json",
+		"val_additional_metrics": "config/config_/metrics/val_additional_metrics.json",
+		"test_additional_metrics": "config/config_/metrics/test_additional_metrics.json",
+		"train_handlers": "config/config_/handlers/train_handlers.json",
+		"val_handlers": "config/config_/handlers/val_handlers.json",
+		"test_handlers": "config/config_/handlers/test_handlers.json",
+		"split_postfixes_train_metrics": "config/config_/metrics/dice_train_metric.json",
+		"split_postfixes_val_metrics": "config/config_/metrics/dice_val_metric.json",
+		"##########": "two things, first the train_additional, val_additional, and test_additional of additional_metrics should become one;;;; also, have to account for vote cases and mean ensemble cases;;;; also, have to account for the multiple dice_train_metrics here",
+		"pre_transforms": {
+			"nnunet_pre_transforms.json": true,
+            "load_image_label_handle.json": "${has_label}",
+			"nnunet_${image_type}_intensity.json": true,
+            "select_itemsd.json": true,
+			"nnunet_end_transforms.json": true
+		},
+		"post_transforms": "config/config_/transforms/nnunet_post_trans.json"
+}
+}
+

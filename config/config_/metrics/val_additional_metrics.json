@@ -1,0 +1,68 @@
+{
+    "validate": {
+    "additional_metrics": [
+       {
+	"path": "metrics.device_val_loss.MCCValLoss",
+	"log_label": "val_loss",
+	"args": {
+		"include_background": "{include_background}",
+		"softmax": "{to_softmax}",
+		"sigmoid": "{to_sigmoid}",
+		"to_onehot_y": "{label_onehot}",
+		"output_transform": "#monai.handlers.from_engine(['pred_for_val_loss', 'label'])"
+	}
+      },
+      {
+        "path": "metrics.device_mean_dice.MeanDice",
+        "log_label": "val_mean_dice_with_bg",
+        "args": {
+          "include_background": true,
+	  "output_transform": "#monai.handlers.from_engine(['pred', 'label'])"
+        }
+      },
+      {
+	 "path": "metrics.device_hausdorff_distance.HausdorffDistance",
+	 "log_label": "val_metric_hausdorff",
+	 "args": {
+	    "include_background": "{include_background}",
+	    "output_transform": "#monai.handlers.from_engine(['pred', 'label'])"
+	 }
+      },
+      {
+       "path": "metrics.no_inf_surface_distance.SurfaceDistance",
+       "log_label": "val_metric_surfacedist",
+       "args": {
+           "include_background": "{include_background}",
+           "output_transform": "#monai.handlers.from_engine(['pred', 'label'])"
+       }
+    },
+      {
+	 "path": "metrics.device_confusion_matrix.ConfusionMatrix",
+	 "log_label": "val_metric_sensitivity",
+	 "args": {
+	    "include_background": "{include_background}",
+	    "metric_name": "sensitivity",
+	    "output_transform": "#monai.handlers.from_engine(['pred', 'label'])"
+	 }
+      },
+      {
+	 "path": "metrics.device_confusion_matrix.ConfusionMatrix",
+	 "log_label": "val_metric_specificity",
+	 "args": {
+	    "include_background": "{include_background}",
+	    "metric_name": "specificity",
+	    "output_transform": "#monai.handlers.from_engine(['pred', 'label'])"
+	 }
+     },
+      {
+	 "path": "metrics.device_confusion_matrix.ConfusionMatrix",
+	 "log_label": "val_metric_mcc",
+	 "args": {
+	    "include_background": "{include_background}",
+	    "metric_name": "matthews correlation coefficient",
+            "output_transform": "#monai.handlers.from_engine(['pred', 'label'])"
+	 }
+      }
+    ]
+}
+}

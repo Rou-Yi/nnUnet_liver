@@ -1,0 +1,9 @@
+{
+        "path": "metrics.device_mean_dice.MeanDice",
+        "log_label": "train_mean_dice_{postfix1}",
+        "args": {
+          "include_background": true,
+          "output_transform": "#monai.handlers.from_engine(['pred_{postfix1}', 'label_{postfix1}'])"
+        }
+}
+

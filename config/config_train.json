@@ -1,0 +1,118 @@
+{
+  "train": {
+    "engine_name": "train",
+    "loss": {
+      "path": "losses.multi_losses.MultiLosses",
+      "args": {
+        "losses": "@loss_losses",
+        "weights": "@loss_weights",
+        "need_extra": "@loss_need_extras",
+        "need_epoch": "@loss_need_epochs",
+        "need_mask": "@loss_need_masks"
+        }
+    },
+    "optimizer": "{optimizer_name}",
+    "lr_scheduler": {
+      "name": "CosineAnnealingLR",
+      "args": {
+        "optimizer": "@optimizer",
+        "T_max": "{epochs}"
+      }
+    },
+    "dataset": {
+      "name": "CacheDataset",
+      "data_list_file_path": "{final_datalist}",
+      "data_file_base_dir": "{DATA_ROOT}",
+      "data_list_key": "final_train",
+      "scale": { 
+	      "factor": "{factor}"
+      },
+      "args": {
+        "transform": "@pre_transforms",
+        "cache_rate": "{cache_rate}"
+      }
+    },
+    "dataloader": {
+      "path": "dataloader.collate_dataloader.CollateDataLoader",
+      "args": {
+        "batch_size": "{train_batch_size}",
+	      "dataset": "@dataset",
+        "shuffle": true,
+        "num_workers": "{num_workers}",
+	      "drop_last": false
+      }
+    },
+    "trainer": {
+      "path": "trainers.vae_one_output_trainer.VAETrainer",
+      "args": {
+        "max_epochs": "{epochs}",
+        "device": "cuda",
+        "train_data_loader": "@dataloader",
+        "network": "@model",
+        "loss_function": "@loss",
+        "optimizer": "@optimizer",
+        "inferer": "@inferer",
+        "post_transform": "@post_transforms",
+        "key_train_metric": "@key_metric",
+        "additional_metrics": "@additional_metrics",
+        "train_handlers": "@handlers",
+        "amp": "{amp}",
+        "network2": null,
+        "optimizer2": null,
+        "loss_function2": null,
+        "to_cascade": "{to_cascade}",
+        "spatial_size": ["{in_channels1}", "{x_size}", "{y_size}", "{z_size}"],
+        "gt": "{gt}",
+        "give_epoch": "{give_epoch}",
+        "has_vae": "{has_vae}",
+        "has_simclr": "{has_simclr}",
+        "use_extra": "{use_extra}",
+        "use_mask": "{use_mask}",
+        "num_of_losses": "{num_of_losses}",
+        "deep_sup_losses": "@deep_sup_losses",
+        "ndimaged_label": "{ndimaged_label}",
+        "ndimaged_label_and_weight": "{ndimaged_label_and_weight}"
+      }
+    }
+  },
+  "validate": {
+    "engine_name": "val",
+    "dataset": {
+      "name": "CacheDataset",
+      "data_list_file_path": "{final_datalist}",
+      "data_file_base_dir": "{DATA_ROOT}",
+      "data_list_key": "final_validate",
+      "scale": {
+	      "factor": "{factor}"
+      },
+      "args": {
+        "transform": "@pre_transforms",
+        "cache_rate": "{cache_rate}"
+      }
+    },
+    "dataloader": {
+      "path": "dataloader.collate_dataloader.CollateDataLoader",
+      "args": {
+	    "dataset": "@dataset",
+        "batch_size": "{train_batch_size}",
+        "shuffle": false,
+        "num_workers": 14,
+	      "drop_last": false
+      }
+    },
+    "evaluator": {
+      "path": "evaluators.post_transform_evaluator.SupervisedEvaluator",
+      "args": {
+        "device": "cuda",
+        "val_data_loader": "@dataloader",
+        "network": "@model",
+        "inferer": "@inferer",
+        "postprocessing": "@post_transforms",
+        "key_val_metric": "@key_metric",
+        "additional_metrics": "@additional_metrics",
+        "val_handlers": "@handlers",
+        "amp": "{amp}"
+      }
+    }
+  }
+}

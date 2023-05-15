@@ -1,0 +1,19 @@
+{
+    "pre_transforms": [
+        {
+            "name": "ThresholdIntensityd",
+            "args": {
+                "keys": "label",
+                "threshold": "{intensity_threshold}",
+                "above": false,
+                "cval": "{intensity_threshold}"
+            }
+        },
+        {
+            "path": "transforms.labels_asdiscrete.LabelAsDiscreted",
+            "args": {
+                "keys": "label"
+            }
+        }
+    ]
+}

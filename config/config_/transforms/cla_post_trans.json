@@ -1,0 +1,101 @@
+{
+   "train_post_transforms": [
+      {
+        "name": "ActivationsDict",
+        "args": {
+          "keys": "pred",
+          "sigmoid": true
+        },
+        "disabled": "{not_single}"
+      },
+      {
+        "name": "ActivationsDict",
+        "args": {
+          "keys": "pred",
+          "softmax": true
+        },
+        "disabled": "{not_multi}"
+      },
+      {
+        "name": "CopyItemsDict",
+        "args": {
+          "times": 1,
+          "keys": "pred",
+          "names": ["binary_pred"]
+        }
+      },
+      {
+        "name": "AsDiscreteDict",
+        "args": {
+          "keys": "binary_pred",
+          "threshold": 0.5
+        }
+      }
+    ],
+  "val_post_transforms": [
+      {
+        "name": "ActivationsDict",
+        "args": {
+          "keys": "pred",
+          "sigmoid": true
+        },
+        "disabled": "{not_single}"
+      },
+      {
+        "name": "ActivationsDict",
+        "args": {
+          "keys": "pred",
+          "softmax": true
+        },
+        "disabled": "{not_multi}"
+      },
+      {
+        "name": "CopyItemsDict",
+        "args": {
+          "times": 1,
+          "keys": "pred",
+          "names": ["binary_pred"]
+        }
+      },
+      {
+        "name": "AsDiscreteDict",
+        "args": {
+          "keys": "binary_pred",
+          "threshold": 0.5
+        }
+      }
+    ],
+"test_post_transforms": [
+        {
+        "name": "ActivationsDict",
+        "args": {
+          "keys": "pred",
+          "sigmoid": true
+        },
+        "disabled": "{not_single}"
+      },
+      {
+        "name": "ActivationsDict",
+        "args": {
+          "keys": "pred",
+          "softmax": true
+        },
+        "disabled": "{not_multi}"
+      },
+      {
+        "name": "CopyItemsDict",
+        "args": {
+          "times": 1,
+          "keys": "pred",
+          "names": ["binary_pred"]
+        }
+      },
+      {
+        "name": "AsDiscreteDict",
+        "args": {
+          "keys": "binary_pred",
+          "threshold": 0.5
+        }
+      }
+  ]
+   }

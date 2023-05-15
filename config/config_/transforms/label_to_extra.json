@@ -1,0 +1,25 @@
+{
+    "pre_transforms": [
+      {
+	"name": "CopyItemsd",
+	"args": {
+	   "keys": "label",
+	   "times": 1,
+	   "names": "extra"
+	}
+      },
+      {
+	"name": "AsDiscreted",
+	"args": {
+	   "keys": "extra",
+	   "to_onehot": "{label_onehot}"
+	}
+      },
+      {
+	"path": "transforms.dist_map_transform.OneHot2Dist",
+	"args": {
+	   "keys": "extra"
+	}
+      }
+    ]
+} 

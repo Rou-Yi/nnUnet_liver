@@ -1,0 +1,100 @@
+{
+    "train_pre_transforms": [
+        {
+        "name": "MaskIntensityDict",
+        "args": {
+          "keys": [
+            "image",
+            "label"
+          ],
+          "mask_key": "extra"
+        },
+        "disabled": "{dont_mask}"
+      },
+      {
+        "name": "CropForegroundDict",
+        "args": {
+          "keys": [
+            "image",
+            "label"
+          ],
+          "source_key": "extra",
+          "margin": "{crop_margin}"
+        }
+      },
+      {
+        "name": "DeleteItemsd",
+        "args": {
+            "keys": [
+                "extra"
+                    ]
+                }
+        }
+    ],
+    "val_pre_transforms": [
+      {
+        "name": "CropForegroundDict",
+        "args": {
+          "keys": [
+            "image",
+            "label"
+          ],
+          "source_key": "extra",
+          "margin": "{crop_margin}"
+        }
+      },
+         {
+        "name": "MaskIntensityDict",
+        "args": {
+          "keys": [
+            "image",
+            "label"
+          ],
+          "mask_key": "extra"
+        },
+        "disabled": "{dont_mask}"
+      },
+      
+        {
+        "name": "DeleteItemsd",
+        "args": {
+            "keys": [
+                "extra"
+                    ]
+                }
+        }
+          ],
+    "test_pre_transforms": [
+        {
+        "name": "MaskIntensityDict",
+        "args": {
+          "keys": [
+            "image",
+            "label"
+          ],
+          "mask_key": "extra"
+        },
+        "disabled": "{dont_mask}"
+      },
+      
+      {
+        "name": "CropForegroundDict",
+        "args": {
+          "keys": [
+            "image",
+            "label"
+          ],
+          "source_key": "extra",
+          "margin": "{crop_margin}"
+        }
+      },
+      {
+        "name": "DeleteItemsd",
+        "args": {
+            "keys": [
+                "extra"
+                    ]
+                }
+        }
+    ]
+}

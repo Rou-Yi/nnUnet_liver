@@ -1,0 +1,11 @@
+{
+    "pre_transforms": [
+    {
+        "path": "transforms.3d_to_2d.ThreeDTo2D",
+        "args": {
+          "keys": "image",
+          "allow_missing_keys": false
+        }
+      }
+    ]
+}

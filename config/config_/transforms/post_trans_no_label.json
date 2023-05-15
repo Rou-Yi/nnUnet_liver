@@ -1,0 +1,229 @@
+{
+    "train_post_transforms": [
+      {
+	  "name": "EnsureTyped",
+	  "args": {
+	     "keys": [
+		   "pred"
+	     ]
+	  }
+      },
+      {
+        "name": "Activationsd",
+        "args": {
+            "keys": "pred",
+            "sigmoid": "{to_sigmoid}",
+	    "softmax": "{to_softmax}"
+        }
+      },
+     {
+	  "name": "AsDiscreted",
+	  "args": {
+	     "keys": ["pred", "label"],
+	     "argmax": [false, false],
+             "to_onehot": [null, "{label_onehot}"],
+             "threshold": [0.5, null]
+	  }
+      },
+      {
+        "name": "SplitDimd",
+        "args": {
+          "keys": [
+            "pred",
+            "label"
+          ],
+          "output_postfixes": "@split_postfixes"
+        }
+      }
+    ],
+"val_post_transforms": [
+      {
+	  "name": "EnsureTyped",
+	  "args": {
+	     "keys": [
+		   "pred"
+	     ]
+	  }
+      },
+      {
+	  "name": "CopyItemsd",
+	  "args": {
+	     "keys": "pred",
+	     "times": 1,
+	     "names": "pred_for_val_loss"
+	  }
+      },
+      {
+        "name": "Activationsd",
+        "args": {
+            "keys": "pred",
+            "sigmoid": "{to_sigmoid}",
+	    "softmax": "{to_softmax}"
+        }
+      },
+     {
+	  "name": "AsDiscreted",
+	  "args": {
+	     "keys": ["pred", "label"],
+	     "argmax": [false, false],
+             "to_onehot": [null, "{label_onehot}"],
+             "threshold": [0.5, null]
+	  }
+      },
+      {
+        "name": "SplitDimd",
+        "args": {
+          "keys": [
+            "pred",
+            "label"
+          ],
+          "output_postfixes": "@split_postfixes"
+        }
+      }
+    ],
+    "test_post_transforms": [
+     {
+	  "name": "EnsureTyped",
+	  "args": {
+	     "keys": [
+		   "pred"
+	     ]
+	  }
+      },
+      {
+        "name": "Activationsd",
+        "args": {
+            "keys": "pred",
+            "sigmoid": "{to_sigmoid}",
+	        "softmax": "{to_softmax}"
+        }
+      },
+      {
+      "name": "Invertd",
+      "args": {
+        "keys": [
+          "pred"
+        ],
+        "transform": "@pre_transforms",
+        "orig_keys": "@first_image_key",
+        "meta_keys": [
+          "pred_meta_dict"
+        ],
+        "nearest_interp": false,
+        "to_tensor": true,
+        "device": "cuda"
+      }
+    },
+    {
+	  "name": "AsDiscreted",
+	  "args": {
+	     "keys": ["pred"],
+	     "argmax": [false],
+             "threshold": [0.5]
+	  }
+    },
+    {
+       "name": "CopyItemsd",
+       "args": {
+          "keys": "pred",
+          "names": [
+                "pred_fn",
+                "pred_fp",
+                "pred_detail",
+                "output_pred"
+                ],
+          "times": 4
+        }
+    },
+    {
+	  "name": "AsDiscreted",
+	  "args": {
+	     "keys": ["output_pred", "pred_detail", "pred_fp", "pred_fn"],
+	     "argmax": [true, true, true, true]
+        }
+    },
+    {
+       "name": "SaveImaged",
+       "disabled": "{dont_save_segmentation}",
+        "args": {
+            "keys": [
+                "pred_detail"
+                ],
+            "meta_keys": [
+                "pred_meta_dict"
+                ],
+            "output_dir": "{MMAR_EVAL_OUTPUT_PATH}",
+            "output_postfix": "seg_detail",
+            "output_dtype": "uint8",
+            "resample": false,
+            "squeeze_end_dims": true,
+            "data_root_dir": "{data_root_dir}",
+            "separate_folder": false
+        }
+    },
+    {
+       "name": "SaveImaged",
+       "disabled": "{dont_save_segmentation}",
+        "args": {
+            "keys": [
+                "pred_fn"
+                ],
+            "meta_keys": [
+                "pred_meta_dict"
+                ],
+            "output_dir": "{MMAR_EVAL_OUTPUT_PATH}",
+            "output_postfix": "seg_fn",
+            "output_dtype": "uint8",
+            "resample": false,
+            "squeeze_end_dims": true,
+            "data_root_dir": "{data_root_dir}",
+            "separate_folder": false
+        }
+    },
+    {
+       "name": "SaveImaged",
+       "disabled": "{dont_save_segmentation}",
+        "args": {
+            "keys": [
+                "pred_fp"
+                ],
+            "meta_keys": [
+                "pred_meta_dict"
+                ],
+            "output_dir": "{MMAR_EVAL_OUTPUT_PATH}",
+            "output_postfix": "seg_fp",
+            "output_dtype": "uint8",
+            "resample": false,
+            "squeeze_end_dims": true,
+            "data_root_dir": "{data_root_dir}",
+            "separate_folder": false
+        }
+    },
+    {
+       "name": "SaveImaged",
+       "disabled": "{dont_save_segmentation}",
+        "args": {
+            "keys": [
+                "output_pred"
+                ],
+            "meta_keys": [
+                "pred_meta_dict"
+                ],
+            "output_dir": "{MMAR_EVAL_OUTPUT_PATH}",
+            "output_postfix": "seg",
+            "output_dtype": "uint8",
+            "resample": false,
+            "squeeze_end_dims": true,
+            "data_root_dir": "{data_root_dir}",
+            "separate_folder": false
+        }
+    },
+    {
+	  "name": "AsDiscreted",
+	  "args": {
+	     "keys": ["pred"],
+             "to_onehot": [null]
+	  }
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+    "seg_path_type": {
+        "path": "{model_path}",
+        "args": {
+          "in_channels": "{in_channels}",
+          "out_channels": "{out_channels}"
+        }
+    },
+    "seg_name_type": {
+        "name": "{model_path}",
+        "args": {
+          "in_channels": "{in_channels}",
+          "out_channels": "{out_channels}"
+        }
+    },
+    "spatial_dims_name_type": {
+	    "name": "{model_path}",
+	    "args": {
+		    "in_channels": "{in_channels}",
+		    "out_channels": "{out_channels}",
+		    "spatial_dims": "{spatial_dims}"
+        }
+    },
+    "num_classes_spatial_dims_name_type": {
+	    "name": "{model_path}",
+	    "args": {
+		    "in_channels": "{in_channels}",
+		    "num_classes": "{num_classes}",
+		    "spatial_dims": "{spatial_dims}"
+        }
+    },
+    "n_classes_base_n_filter_path_type": {
+	    "path": "{model_path}",
+	    "args": {
+		    "in_channels": "{in_channels}",
+		    "n_classes": "{n_classes}",
+		    "base_n_filter": "{base_n_filter}"
+        }
+    },
+    "unet_form": {
+	    "path": "{model_path}",
+	    "args": {
+		    "in_channels": "{in_channels}",
+		    "out_channels": "{out_channels}",
+		    "spatial_dims": "{spatial_dims}",
+		    "channels": "@channels",
+		    "strides": "@strides"
+        }
+    }
+}

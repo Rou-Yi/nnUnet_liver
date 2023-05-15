@@ -1,0 +1,13 @@
+{
+    "validate": {
+  "additional_metrics": [
+      {
+        "name": "ROCAUC",
+        "log_label": "val_auc",
+        "args": {
+          "output_transform": "#monai.handlers.from_engine(['pred', 'label'])"
+        }
+      }
+  ]
+}
+}

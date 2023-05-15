@@ -1,0 +1,11 @@
+{
+  "additional_metrics": [
+    {
+      "name": "ROCAUC",
+      "log_label": "test_auc",
+      "args": {
+        "output_transform": "#monai.handlers.from_engine(['pred', 'label'])"
+      }
+    }
+  ]
+}

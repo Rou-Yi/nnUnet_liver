@@ -1,0 +1,48 @@
+{
+    "validate": {
+    "handlers": [
+      {
+        "path": "handlers.earlystop_handler.MyEarlyStopHandler",
+        "args": {
+            "patience": 10,
+            "score_function": "lambda x: x.state.metrics['val_mean_dice']"
+        }
+      },
+      {
+        "name": "StatsHandler",
+        "rank": 0,
+        "args": {
+          "output_transform": "lambda x: None"
+        }
+      },
+     {
+        "name": "TensorBoardStatsHandler",
+        "rank": 0,
+        "args": {
+          "log_dir": "{MMAR_CKPT_DIR}",
+          "output_transform": "lambda x: None"
+        }
+      },
+      {
+        "path": "handlers.epoch_checkpoint_saver.EpochCheckpointSaver",
+        "rank": 0,
+        "args": {
+          "save_dir": "{MMAR_CKPT_DIR}",
+          "save_dict": {
+		  "model": "@model", 
+		  "optimizer": "@optimizer", 
+		  "lr_scheduler": "@lr_scheduler",
+		  "train_conf": "@conf"
+	  },
+	  "save_final": true,
+          "save_interval": 50,
+	  "file_prefix": "val",
+          "save_key_metric": true,
+	  "key_metric_filename": null,
+	  "key_metric_n_saved": 5,
+	  "key_metric_save_state": true
+        }
+      }
+    ]
+}
+}

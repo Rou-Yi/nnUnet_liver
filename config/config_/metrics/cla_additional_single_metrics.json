@@ -1,0 +1,13 @@
+{
+    "train": {
+  "additional_metrics": [
+      {
+        "name": "ROCAUC",
+        "log_label": "train_auc",
+        "args": {
+          "output_transform": "#monai.handlers.from_engine(['pred', 'label'])"
+        }
+      }
+  ]
+}
+}

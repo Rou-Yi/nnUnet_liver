@@ -1,0 +1,82 @@
+{
+"train_pre_transforms": [
+         {
+	"name": "RandCropByPosNegLabeld",
+	"args": {
+       "keys": "@pre_transforms_after_concat_keys_with_extra",
+	   "label_key": "label",
+       "spatial_size": ["{x_size}", "{y_size}", "{z_size}"],
+	   "num_samples": "{num_samples}",
+	   "allow_smaller": true
+	}
+      },
+    {
+	"name": "ResizeWithPadOrCropd",
+	"args": {
+       	   "keys": "@pre_transforms_after_concat_keys_with_extra",
+       	   "spatial_size": ["{x_size}", "{y_size}", "{z_size}"]
+	}
+      },
+      {
+	"name": "RandFlipd",
+	"args": {
+	  "keys": "@pre_transforms_after_concat_keys_with_extra",
+	  "prob": 0.7,
+	  "spatial_axis": 0
+	}
+      },
+      {
+	"name": "RandFlipd",
+	"args": {
+	  "keys": "@pre_transforms_after_concat_keys_with_extra",
+	  "prob": 0.7,
+	  "spatial_axis": 1
+	}
+      },
+      {
+	"name": "RandRotate90d",
+	"args": {
+	  "keys": "@pre_transforms_after_concat_keys_with_extra",
+	  "prob": 0.5
+	}
+      },
+      {
+	"name": "RandScaleIntensityd",
+	"args": {
+	  "keys": "image",
+	  "prob": 1.0,
+	  "factors": 0.1
+	}
+      },
+      {
+	"name": "RandShiftIntensityd",
+	"args": {
+        "keys": "image",
+	  "prob": 1.0,
+	  "offsets": 0.1
+	}
+      },
+      {
+        "name": "EnsureTyped",
+        "args": {
+          "keys": "@pre_transforms_after_concat_keys_with_extra"
+        }
+      }
+    ],
+"val_pre_transforms": [
+      {
+        "name": "EnsureTyped",
+        "args": {
+          "keys": "@pre_transforms_after_concat_keys"
+        }
+      }
+    ],
+    "test_pre_transforms": [
+    {
+      "name": "EnsureTyped",
+      "args": {
+        "keys": "@pre_transforms_after_concat_keys"
+      }
+    }
+  ]
+}

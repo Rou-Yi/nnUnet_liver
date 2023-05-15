@@ -1,0 +1,92 @@
+{
+    "additional_metrics": [
+    {
+      "name": "MeanDice",
+      "log_label": "test_mean_dice_with_bg",
+      "args": {
+          "include_background": true,
+          "output_transform": "#monai.handlers.from_engine(['pred', 'label'])"
+      }
+    },
+    {
+       "path": "metrics.hausdorff_distance_with_meta_dict.HausdorffDistance",
+       "log_label": "test_metric_hausdorff",
+       "args": {
+           "include_background": "{include_background}",
+           "output_transform": "#monai.handlers.from_engine(['pred', 'label', 'pred0_meta_dict'])"
+       }
+    },
+    {
+       "path": "metrics.no_inf_surface_distance.SurfaceDistance",
+       "log_label": "test_metric_surfacedist",
+       "args": {
+           "include_background": "{include_background}",
+           "output_transform": "#monai.handlers.from_engine(['pred', 'label'])"
+       }
+    },
+    {
+       "path": "metrics.device_confusion_matrix.ConfusionMatrix",
+       "log_label": "test_metric_sensitivity",
+       "args": {
+           "include_background": "{include_background}",
+           "metric_name": "sensitivity",
+           "output_transform": "#monai.handlers.from_engine(['pred', 'label'])"
+       }
+    },
+    {
+       "path": "metrics.device_confusion_matrix.ConfusionMatrix",
+       "log_label": "test_metric_specificity",
+       "args": {
+           "include_background": "{include_background}",
+           "metric_name": "specificity",
+           "output_transform": "#monai.handlers.from_engine(['pred', 'label'])"
+       }
+    },
+    {
+       "path": "metrics.device_fp_fn.DoFpFn",
+       "log_label": "test_metric_fp",
+       "args": {
+	   "fp_or_fn": "fp",
+           "output_transform": "#monai.handlers.from_engine(['pred', 'label'])"
+       }
+    },
+    {
+       "path": "metrics.device_fp_fn.DoFpFn",
+       "log_label": "test_metric_fn",
+       "args": {
+	   "fp_or_fn": "fn",
+           "output_transform": "#monai.handlers.from_engine(['pred', 'label'])"
+       }
+    },
+    {
+       "path": "metrics.surface_dice_handler.SurfaceDice",
+       "log_label": "test_surface_dice",
+       "args": {
+            "class_thresholds": "@surface_dice_threshold",
+            "include_background": "{include_background}",
+            "distance_metric": "euclidean",
+            "output_transform": "#monai.handlers.from_engine(['pred', 'label', 'pred0_meta_dict'])"
+        }
+    },
+    {
+       "path": "metrics.surface_dice_handler.SurfaceDice",
+       "log_label": "test_surface_dice_95th_percentile",
+       "args": {
+            "class_thresholds": "@surface_dice_95_threshold",
+            "include_background": "{include_background}",
+            "distance_metric": "euclidean",
+            "output_transform": "#monai.handlers.from_engine(['pred', 'label', 'pred0_meta_dict'])"
+        }
+    },
+    {
+	 "path": "metrics.device_confusion_matrix.ConfusionMatrix",
+	 "log_label": "test_metric_mcc",
+	 "args": {
+	    "include_background": "{include_background}",
+	    "metric_name": "matthews correlation coefficient",
+            "output_transform": "#monai.handlers.from_engine(['pred', 'label'])"
+	 }
+      }
+  ]
+}
+

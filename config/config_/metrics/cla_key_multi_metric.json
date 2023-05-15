@@ -1,0 +1,12 @@
+{
+	"key_metric": {
+        "path": "metrics.torcheval_metrics_accuracy.TorchEvalMetricMultiAccuracy",
+        "log_label": "train_acc_multi",
+        "is_key_metric": true,
+        "args": {
+          "num_classes": "{out_channels1}",
+          "output_transform": "#monai.handlers.from_engine(['binary_pred', 'label'])",
+          "device": "@device"
+        }
+  }
+}

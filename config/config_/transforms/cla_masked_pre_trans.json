@@ -1,0 +1,293 @@
+{
+   "train_pre_transforms": [
+      {
+        "name": "ToNumpyd",
+        "args": {
+          "keys": [
+            "label"
+          ]
+        }
+      },
+      {
+        "name": "CastToTypeDict",
+        "args": {
+          "keys": [
+            "label"
+          ],
+          "dtype": "float32"
+        }
+      },
+      {
+        "name": "LoadImageDict",
+        "args": {
+          "keys": [
+            "image",
+            "label_image"
+          ]
+        }
+      },
+      {
+        "name": "EnsureChannelFirstDict",
+        "args": {
+          "keys": [
+            "image",
+            "label_image"
+          ]
+        }
+      },
+      {
+        "name": "OrientationDict",
+        "args": {
+          "keys": [
+            "image",
+            "label_image"
+          ],
+          "axcodes": "RAS"
+        }
+      },
+      {
+        "name": "ScaleIntensityRangeDict",
+        "args": {
+          "keys": "image",
+          "a_min": -1000,
+          "a_max": 500,
+          "b_min": 0,
+          "b_max": 1,
+          "clip": true
+        }
+      },
+      {
+        "name": "MaskIntensityDict",
+        "args": {
+          "keys": [
+            "image"
+          ],
+          "mask_key": "label_image"
+        },
+        "disabled": "{disable_mask_intensity}"
+      },
+      {
+        "name": "CropForegroundDict",
+        "args": {
+          "keys": [
+            "image"
+          ],
+          "source_key": "label_image",
+          "margin": 5
+        }
+      },
+      {
+          "name": "DeleteItemsDict",
+          "args": {
+              "keys": [
+                "label_image"
+              ]
+          }
+      },
+      {
+        "name": "ResizeDict",
+        "args": {
+          "keys": [
+            "image"
+          ],
+          "spatial_size": [192, 192, 64],
+          "mode": [
+            "area"
+          ]
+        }
+      },
+      {
+        "name": "RandShiftIntensityDict",
+        "args": {
+          "keys": "image",
+          "offsets": 0.1,
+          "prob": 0.5
+        }
+      },
+      {
+        "name": "RandAdjustContrastDict",
+        "args": {
+          "keys": "image",
+          "gamma": [0.5, 4.5],
+          "prob": 0.5
+        }
+      },
+      {
+        "name": "RandGaussianNoiseDict",
+        "args": {
+          "keys": "image",
+          "prob": 0.75,
+          "std": 0.1
+        }
+      },
+      {
+        "name": "RandZoomDict",
+        "args": {
+          "keys": "image",
+          "min_zoom": [0.8, 0.8, 0.8],
+          "max_zoom": [1.2, 1.2, 1.2],
+          "keep_size": true,
+          "prob": 0.25
+        }
+      },
+      {
+        "name": "ToTensorDict",
+        "args": {
+          "keys": [
+            "image",
+            "label"
+          ]
+        }
+      },
+      {
+        "name": "SaveImageDict",
+        "args": {
+          "keys": ["image"],
+          "output_dir": "./debug",
+          "output_ext": ".nii.gz",
+          "resample": false
+        },
+        "disabled": true
+      }
+    ],
+    "val_pre_transforms": [
+      {
+        "ref": "ToNumpyd"
+      },
+      {
+        "ref": "CastToTypeDict"
+      },
+      {
+        "ref": "LoadImageDict"
+      },
+      {
+        "ref": "EnsureChannelFirstDict"
+      },
+      {
+        "ref": "OrientationDict"
+      },
+      {
+        "ref": "ScaleIntensityRangeDict"
+      },
+      {
+        "name": "MaskIntensityDict",
+        "args": {
+          "keys": [
+            "image"
+          ],
+          "mask_key": "label_image"
+        },
+        "disabled": "{disable_mask_intensity}"
+      },
+      {
+        "ref": "CropForegroundDict"
+      },
+      {
+        "ref": "DeleteItemsDict"
+      },
+      {
+        "ref": "ResizeDict"
+      },
+      {
+        "ref": "ToTensorDict"
+      }
+    ],
+    "test_pre_transforms": [
+      {
+        "name": "LoadImageDict",
+        "args": {
+          "keys": [
+            "image",
+            "label_image"
+          ]
+        }
+      },
+      {
+        "name": "EnsureChannelFirstDict",
+        "args": {
+          "keys": [
+            "image",
+            "label_image"
+          ]
+        }
+      },
+      {
+        "name": "OrientationDict",
+        "args": {
+          "keys": [
+            "image",
+            "label_image"
+          ],
+          "axcodes": "RAS"
+        }
+      },
+      {
+        "name": "ScaleIntensityRangeDict",
+        "args": {
+          "keys": "image",
+          "a_min": -1000,
+          "a_max": 500,
+          "b_min": 0,
+          "b_max": 1,
+          "clip": true
+        }
+      },
+      {
+        "name": "MaskIntensityDict",
+        "args": {
+          "keys": [
+            "image"
+          ],
+          "mask_key": "label_image"
+        },
+        "disabled": true
+      },
+      {
+        "name": "CropForegroundDict",
+        "args": {
+          "keys": [
+            "image"
+          ],
+          "source_key": "label_image",
+          "margin": 5
+        }
+      },
+      {
+          "name": "DeleteItemsDict",
+          "args": {
+              "keys": [
+                "label_image"
+              ]
+          }
+      },
+      {
+        "name": "ResizeDict",
+        "args": {
+          "keys": [
+            "image"
+          ],
+          "spatial_size": [192, 192, 64],
+          "mode": [
+            "area"
+          ]
+        }
+      },
+      {
+        "name": "DataStatsDict",
+        "args": {
+          "keys": [
+            "image"
+          ],
+          "prefix": "Valid after rescale & crop"
+        }
+      },
+      {
+        "name": "ToTensorDict",
+        "args": {
+          "keys": [
+            "image"
+          ]
+        }
+      }
+  ]
+   }

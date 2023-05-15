@@ -1,0 +1,140 @@
+{
+"train_pre_transforms": [
+    {
+      "name": "LoadImaged",
+      "args": {
+        "keys": "@pre_transforms_to_load_keys"
+      }
+    },
+    {
+      "name": "EnsureChannelFirstd",
+      "args": {
+          "keys": "@pre_transforms_to_load_keys"
+      }
+    },
+    {
+      "name": "Orientationd",
+      "args": {
+          "keys": "@pre_transforms_keys",
+          "as_closest_canonical": true,
+          "allow_missing_keys": true
+      }
+    },
+    {
+      "name": "Spacingd",
+      "args": {
+          "keys": "@pre_transforms_keys",
+          "pixdim": ["{x_spacing}", "{y_spacing}", "{z_spacing}"],
+          "mode": "@spacingd_modes",
+          "allow_missing_keys": true
+      }
+    },
+    {
+      "path": "transforms.check_label_not_0.CheckLabelNot0d",
+      "args": {
+        "keys": "@pre_transforms_keys",
+          "allow_missing_keys": true
+      }
+    },
+    {
+      "path": "transforms.concat_image_label_extra_key.ConcatImageLabelExtraKeyd",
+      "args": {
+          "image_keys": "@image_keys",
+          "label_keys": "@label_keys",
+          "extra_keys": "@extra_keys"
+      }
+    }
+  ],
+"val_pre_transforms": [
+      {
+        "name": "LoadImaged",
+        "args": {
+          "keys": "@pre_transforms_to_load_keys"
+        }
+      },
+      {
+	"name": "EnsureChannelFirstd",
+	"args": {
+	    "keys": "@pre_transforms_to_load_keys"
+	}
+      },
+      {
+	"name": "Orientationd",
+	"args": {
+	    "keys": "@pre_transforms_keys",
+	    "as_closest_canonical": true,
+        "allow_missing_keys": true
+	}
+      },
+      {
+        "name": "Spacingd",
+        "args": {
+            "keys": "@pre_transforms_keys",
+            "pixdim": ["{x_spacing}", "{y_spacing}", "{z_spacing}"],
+            "mode": "@spacingd_modes",
+            "allow_missing_keys": true
+        }
+      },
+      {
+        "path": "transforms.check_label_not_0.CheckLabelNot0d",
+        "args": {
+          "keys": "@pre_transforms_keys",
+            "allow_missing_keys": true
+        }
+      },
+      {
+        "path": "transforms.concat_image_label_extra_key.ConcatImageLabelExtraKeyd",
+        "args": {
+            "image_keys": "@image_keys",
+            "label_keys": "@label_keys",
+            "extra_keys": "@extra_keys"
+        }
+      }
+          ],
+    "test_pre_transforms": [
+   {
+        "name": "LoadImaged",
+        "args": {
+          "keys": "@pre_transforms_to_load_keys"
+        }
+      },
+      {
+	"name": "EnsureChannelFirstd",
+	"args": {
+	    "keys": "@pre_transforms_to_load_keys"
+	}
+      },
+      {
+	"name": "Orientationd",
+	"args": {
+	    "keys": "@pre_transforms_keys",
+	    "as_closest_canonical": true,
+        "allow_missing_keys": true
+	}
+      },
+      {
+        "name": "Spacingd",
+        "args": {
+            "keys": "@pre_transforms_keys",
+            "pixdim": ["{x_spacing}", "{y_spacing}", "{z_spacing}"],
+            "mode": "@spacingd_modes",
+            "allow_missing_keys": true
+        }
+      },
+      {
+	"path": "transforms.check_label_not_0.CheckLabelNot0d",
+	"args": {
+	  "keys": "@pre_transforms_keys",
+       "allow_missing_keys": true
+	}
+      },
+      {
+        "path": "transforms.concat_image_label_extra_key.ConcatImageLabelExtraKeyd",
+        "args": {
+            "image_keys": "@image_keys",
+            "label_keys": "@label_keys",
+            "extra_keys": "@extra_keys"
+        }
+      }
+    ]
+}

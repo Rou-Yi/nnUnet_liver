@@ -1,0 +1,17 @@
+{
+"evaluator": {
+    "path": "evaluators.ensemble_evaluator.EnsembleEvaluator",
+    "args": {
+      "device": "cuda",
+      "val_data_loader": "@dataloader",
+      "pred_keys": "@pred_keys",
+      "networks": "@networks",
+      "inferer": "@inferer",
+      "postprocessing": "@post_transforms",
+      "val_handlers": "@handlers",
+      "amp": "{amp}",
+      "key_val_metric": "@key_metric",
+      "additional_metrics": "@additional_metrics"
+    }
+  }
+}

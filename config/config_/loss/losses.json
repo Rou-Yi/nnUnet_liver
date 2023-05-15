@@ -1,0 +1,93 @@
+{
+   "mcc_wo_bg_loss": {
+      "path": "losses.mcc_loss.MCCLoss",
+      "args": {
+          "include_background": "{include_background}",
+          "to_onehot_y": "{loss_onehot}",
+          "sigmoid": "{to_sigmoid}",
+	      "softmax": "{to_softmax}"
+      }
+    },
+   "mcc_wo_bg_loss_0307": {
+      "path": "losses.mcc_stricter_loss.MCCLoss",
+      "args": {
+          "include_background": "{include_background}",
+          "to_onehot_y": "{loss_onehot}",
+          "sigmoid": "{to_sigmoid}",
+	      "softmax": "{to_softmax}"
+      }
+    },
+    "dice_wo_bg_loss": {
+      "name": "DiceLoss",
+      "args": {
+          "include_background": "{include_background}",
+          "to_onehot_y": "{loss_onehot}",
+          "softmax": "{to_softmax}",
+          "squared_pred": true
+        }
+    },
+    "dicefocal_wo_bg_loss": {
+      "name": "DiceFocalLoss",
+      "args": {
+          "include_background": "{include_background}",
+          "to_onehot_y": "{loss_onehot}",
+          "softmax": "{to_softmax}",
+          "squared_pred": true
+        }
+    },
+    "focal_loss": {
+        "name": "FocalLoss",
+      "args": {
+	   "include_background": "{include_background}",
+          "to_onehot_y": "{loss_onehot}"
+      }
+    },
+    "////dice_boundary_loss_needs": "extras, epochs",
+    "dice_boundary_loss": {
+    "path": "losses.dice_boundary.DiceBoundary",
+      "args": {
+      "include_background": "{include_background}",
+            "to_onehot_y": "{loss_onehot}",
+            "softmax": "{to_softmax}",
+            "squared_pred": true,
+            "cutoff_epoch": "{epochs}"
+        }
+    },
+    "pure_boundary_loss": {
+      "path": "losses.dice_boundary.DiceBoundary",
+        "args": {
+          "include_background": "{include_background}",
+          "to_onehot_y": "{loss_onehot}",
+          "softmax": "{to_softmax}",
+          "squared_pred": true,
+          "cutoff_epoch": -1,
+          "no_dice": true
+        }
+    },
+    "dice_ce_loss": {
+      "name": "DiceCELoss",
+      "args": {
+          "include_background": "{include_background}",
+          "to_onehot_y": "{loss_onehot}",
+          "softmax": "{to_softmax}",
+          "squared_pred": true,
+          "batch": true
+        }
+    },
+    "DS_dice_ce_loss": {
+      "name": "DeepSupervisionLoss",
+      "args": {
+          "loss": "@dice_ce_loss"
+        }
+    },
+    "BCE_loss": {
+      "name": "BCEWithLogitsLoss",
+        "args": {
+        }
+    },
+    "cross_entropy_loss": {
+      "path": "torch.nn.CrossEntropyLoss", 
+      "args":{
+      }
+    }
+}

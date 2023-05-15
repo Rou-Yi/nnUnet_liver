@@ -1,0 +1,11 @@
+{
+	"key_metric": {
+        "path": "metrics.device_confusion_matrix.ConfusionMatrix",
+        "log_label": "train_acc",
+        "is_key_metric": true,
+        "args": {
+	  "metric_name": "accuracy",
+          "output_transform": "#monai.handlers.from_engine(['binary_pred', 'label'])"
+        }
+  }
+}

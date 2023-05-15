@@ -1,0 +1,12 @@
+{
+"key_metric": 
+      {
+        "path": "metrics.device_mean_dice.MeanDice",
+        "log_label": "train_mean_dice",
+        "is_key_metric": true,
+        "args": {
+          "include_background": false,
+	  "output_transform": "#monai.handlers.from_engine(['pred', 'label'])"
+        }
+      }
+}

@@ -1,0 +1,21 @@
+{
+   "Adam": {
+      "name": "Adam",
+      "args": {
+	      "params": "#@model.parameters()",
+        "lr": "{learning_rate}",
+        "weight_decay": "{weight_decay}",
+        "amsgrad": "{amsgrad}"
+      }
+    },
+   "SGD": {
+      "name": "SGD",
+      "args": {
+	      "params": "#@model.parameters()",
+        "lr": "{learning_rate}",
+        "weight_decay": "{weight_decay}",
+        "nesterov": true,
+        "momentum": 0.99
+      }
+    }
+}

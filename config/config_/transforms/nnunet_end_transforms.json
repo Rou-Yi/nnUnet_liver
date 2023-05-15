@@ -1,0 +1,161 @@
+{
+"train_pre_transforms": [
+    {
+        "name": "RandRotated",
+        "args": {
+          "keys": "@pre_transforms_after_concat_keys_with_extra",
+          "range_x": 0.5236,
+          "range_y": 0.5236,
+          "range_z": 0.5236,
+          "prob": 0.2,
+          "keep_size": false,
+          "mode": [
+            "bilinear",
+            "nearest"
+          ]
+        }
+      },
+      {
+        "name": "RandZoomd",
+        "args": {
+          "keys": "@pre_transforms_after_concat_keys_with_extra",
+          "prob": 0.2,
+          "min_zoom": 0.7,
+          "max_zoom": 1.4,
+          "mode": [
+            "trilinear",
+            "nearest"
+          ],
+          "keep_size": false
+        }
+      },
+      {
+        "path": "transforms.nnunet_spatial_augmentations.RandFlipAxes3Dd",
+        "args": {
+          "keys": "@pre_transforms_after_concat_keys_with_extra",
+          "prob_x": 0.5,
+          "prob_y": 0.5,
+          "prob_z": 0.5
+        }
+      },
+    {
+        "name": "SpatialPadd",
+        "args": {
+            "keys": "@pre_transforms_after_concat_keys_with_extra",
+            "spatial_size": ["{x_size}", "{y_size}", "{z_size}"]
+        }
+    },
+    {
+        "name": "RandCropByPosNegLabeld",
+        "args": {
+            "keys": "@pre_transforms_after_concat_keys_with_extra",
+            "label_key": "label",
+            "spatial_size": ["{x_size}", "{y_size}", "{z_size}"],
+            "pos": 2.0,
+            "neg": 1.0,
+            "num_samples": "{num_samples}"
+        }
+    },
+    {
+      "name": "RandGaussianNoised",
+      "args": {
+        "keys": "image",
+        "prob": 0.15,
+        "mean": 0,
+        "std": 0.1
+      }
+    },
+    {
+      "name": "RandGaussianSmoothd",
+      "args": {
+        "keys": "image",
+        "sigma_x": [
+          0.5,
+          1.5
+        ],
+        "sigma_y": [
+          0.5,
+          1.5
+        ],
+  "sigma_z": [
+          0.5,
+          1.5
+        ],
+        "prob": 0.15
+      }
+    },
+    {
+      "path": "transforms.nnunet_intensity_augmentations.RandAdjustBrightnessAndContrastd",
+      "args": {
+        "keys": "image",
+        "probs": [
+          0.15,
+          0.15
+        ],
+        "brightness_range": [
+          0.7,
+          1.3
+        ],
+        "contrast_range": [
+          0.65,
+          1.5
+        ]
+      }
+    },
+    {
+      "path": "transforms.nnunet_spatial_augmentations.SimulateLowResolutiond",
+      "args": {
+        "keys": "image",
+        "prob": 0.25,
+        "zoom_range": [
+          0.5,
+          1
+        ]
+      }
+    },
+    {
+      "name": "RandAdjustContrastd",
+      "args": {
+        "keys": "image",
+        "prob": 0.15,
+        "gamma": [
+          0.8,
+          1.2
+        ]
+      }
+    },
+    {
+      "path": "transforms.nnunet_intensity_augmentations.RandInverseIntensityGammad",
+      "args": {
+        "keys": "image",
+        "prob": 0.15,
+        "gamma": [
+          0.8,
+          1.2
+        ]
+      }
+    }, 
+    {
+      "name": "EnsureTyped",
+      "args": {
+        "keys": "@pre_transforms_after_concat_keys_with_extra"
+      }
+    }
+],
+"val_pre_transforms": [
+    {
+        "name": "EnsureTyped",
+        "args": {
+	        "keys": "@pre_transforms_after_concat_keys_with_extra"
+        }
+    }
+],
+"test_pre_transforms": [
+    {
+        "name": "EnsureTyped",
+        "args": {
+	        "keys": "@pre_transforms_after_concat_keys_with_extra"
+        }
+    }
+  ]
+}

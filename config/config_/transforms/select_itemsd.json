@@ -1,0 +1,28 @@
+{
+"train_pre_transforms": [
+    {
+	"name": "SelectItemsd",
+	"args": {
+	    "keys": "@pre_transforms_after_concat_keys_with_extra"
+	}
+      }
+    ],
+"val_pre_transforms": [
+    {
+	"name": "SelectItemsd",
+	"args": {
+	    "keys": "@pre_transforms_val_test_select_items_keys",
+        "allow_missing_keys": true
+	}
+      }
+],
+"test_pre_transforms": [
+    {
+	"name": "SelectItemsd",
+	"args": {
+	    "keys": "@pre_transforms_val_test_select_items_keys",
+        "allow_missing_keys": true
+	}
+      }
+]
+}

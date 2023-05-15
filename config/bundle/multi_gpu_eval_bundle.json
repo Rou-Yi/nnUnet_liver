@@ -1,0 +1,16 @@
+{
+    "device": "$torch.device(f'cuda:{dist.get_rank()}')",
+    "model": {
+        "_target_": "torch.nn.parallel.DistributedDataParallel",
+        "module": "$@model_def.to(@device)",
+        "device_ids": ["@device"]
+    },
+    "sampler": {
+        "_target_": "DistributedSampler",
+        "dataset": "@dataset",
+        "even_divisible": false,
+        "shuffle": false
+    },
+    "dataloader#sampler": "@sampler",
+    "evaluator#val_handlers": "$None if dist.get_rank() > 0 else @handlers"
+}

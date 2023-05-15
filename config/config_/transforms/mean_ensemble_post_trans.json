@@ -1,0 +1,288 @@
+{
+    "train_post_transforms": [
+     {
+	  "name": "EnsureTyped",
+	  "args": {
+	     "keys": [
+		   "pred"
+	     ]
+	  }
+      },
+      {
+        "name": "Activationsd",
+        "args": {
+            "keys": "pred",
+            "sigmoid": "{to_sigmoid}",
+	    "softmax": "{to_softmax}"
+        }
+      },
+           {
+	  "name": "AsDiscreted",
+	  "args": {
+	     "keys": ["pred", "label"],
+	     "argmax": [false, false],
+             "to_onehot": [null, "{label_onehot}"],
+             "threshold": [0.5, null]
+	  }
+      },
+      {
+        "name": "SplitDimd",
+        "args": {
+          "keys": [
+            "pred",
+            "label"
+          ],
+          "output_postfixes": "@split_postfixes"
+        }
+      }
+    ],
+"val_post_transforms": [
+      {
+	  "ref": "EnsureTyped"
+      },
+      {
+	  "name": "CopyItemsd",
+	  "args": {
+	     "keys": "pred",
+	     "times": 1,
+	     "names": "pred_for_val_loss"
+	  }
+      },
+      {
+	  "ref": "Activationsd"
+      },
+      {
+	  "ref": "AsDiscreted"
+      },
+      {
+        "ref": "SplitDimd"
+      }
+    ],
+    "test_post_transforms": [
+    {
+	  "name": "EnsureTyped",
+	  "args": {
+	     "keys": "@pred_keys"
+	  }
+      },
+      {
+          "path": "transforms.path_mean_ensembled.PathMeanEnsembled",
+          "args": {
+              "keys": "@pred_keys",
+              "output_key": "pred",
+              "path_files": "@model_paths"
+        }
+      },
+      {
+        "name": "Activationsd",
+        "args": {
+            "keys": "@pred_keys",
+            "sigmoid": "{to_sigmoid}",
+	    "softmax": "{to_softmax}"
+        }
+      },
+    {
+      "name": "Invertd",
+      "args": {
+        "keys": [
+            "pred"
+        ],
+        "transform": "@pre_transforms",
+        "orig_keys": [
+		"image"
+	],
+        "meta_keys": [
+            "pred_meta_dict"
+        ],
+	"orig_meta_keys": [
+		"image_meta_dict"
+	],
+        "nearest_interp": false,
+        "to_tensor": true,
+        "device": "cuda"
+      }
+    },
+    {
+      "name": "Invertd",
+      "args": {
+        "keys": [
+            "label"
+        ],
+        "transform": "@pre_transforms",
+        "orig_keys": [
+		"label"
+	],
+        "meta_keys": [
+            "pre_label_meta_dict"
+        ],
+	"orig_meta_keys": [
+		"label_meta_dict"
+	],
+        "nearest_interp": false,
+        "to_tensor": true,
+        "device": "cuda"
+      }
+    },
+    {
+	  "name": "AsDiscreted",
+	  "args": {
+	     "keys": ["pred", "label"],
+	     "argmax": [true, false],
+             "threshold": [null, null]
+	  }
+    },
+    {
+       "name": "CopyItemsd",
+       "args": {
+          "keys": "pred",
+          "names": [
+                "pred_fn",
+                "pred_fp"
+                ],
+          "times": 2
+        }
+    },
+    {
+       "path": "transforms.fp_fn_tumors.FpFnTumors",
+       "args": {
+            "keys": "pred_fp",
+            "other_keys": "label",
+	        "to_onehot": "{out_channels1}",
+            "fp_or_fn": "fp"
+        }
+    },
+    {
+       "path": "transforms.fp_fn_tumors.FpFnTumors",
+       "args": {
+            "keys": "pred_fn",
+            "other_keys": "label",
+	        "to_onehot": "{out_channels1}",
+            "fp_or_fn": "fn"
+        }
+    },
+    {
+       "name": "CopyItemsd",
+       "args": {
+          "keys": [
+                "pred",
+                "label"
+          ],
+          "names": [
+                "pred_detail",
+                "label_detail"
+                ],
+          "times": 1
+        }
+    },
+    {
+       "path": "transforms.fp_fn_tumors_detailed.FpFnTumors",
+        "args": {
+            "keys": "pred_detail",
+            "other_keys": "label_detail",
+	        "to_onehot": "{out_channels1}"
+        }
+    },
+    {
+       "name": "SaveImaged",
+       "disabled": "{dont_save_segmentation}",
+        "args": {
+            "keys": [
+                "pred_detail"
+                ],
+            "meta_keys": [
+                "pred_meta_dict"
+                ],
+            "output_dir": "{MMAR_EVAL_OUTPUT_PATH}",
+            "output_postfix": "seg_detail",
+            "output_dtype": "uint8",
+            "resample": false,
+            "squeeze_end_dims": true,
+            "data_root_dir": "{data_root_dir}",
+            "separate_folder": false
+        }
+    },
+    {
+       "name": "SaveImaged",
+       "disabled": "{dont_save_segmentation}",
+        "args": {
+            "keys": [
+                "label_detail"
+                ],
+            "meta_keys": [
+                "label_meta_dict"
+                ],
+            "output_dir": "{MMAR_EVAL_OUTPUT_PATH}",
+            "output_postfix": "label_detail",
+            "output_dtype": "uint8",
+            "resample": false,
+            "squeeze_end_dims": true,
+            "data_root_dir": "{data_root_dir}",
+            "separate_folder": false
+        }
+    },
+    {
+       "name": "SaveImaged",
+       "disabled": "{dont_save_segmentation}",
+        "args": {
+            "keys": [
+                "pred_fn"
+                ],
+            "meta_keys": [
+                "pred_meta_dict"
+                ],
+            "output_dir": "{MMAR_EVAL_OUTPUT_PATH}",
+            "output_postfix": "seg_fn",
+            "output_dtype": "uint8",
+            "resample": false,
+            "squeeze_end_dims": true,
+            "data_root_dir": "{data_root_dir}",
+            "separate_folder": false
+        }
+    },
+    {
+       "name": "SaveImaged",
+       "disabled": "{dont_save_segmentation}",
+        "args": {
+            "keys": [
+                "pred_fp"
+                ],
+            "meta_keys": [
+                "pred_meta_dict"
+                ],
+            "output_dir": "{MMAR_EVAL_OUTPUT_PATH}",
+            "output_postfix": "seg_fp",
+            "output_dtype": "uint8",
+            "resample": false,
+            "squeeze_end_dims": true,
+            "data_root_dir": "{data_root_dir}",
+            "separate_folder": false
+        }
+    },
+    {
+       "name": "SaveImaged",
+       "disabled": "{dont_save_segmentation}",
+        "args": {
+            "keys": [
+                "pred"
+                ],
+            "meta_keys": [
+                "pred_meta_dict"
+                ],
+            "output_dir": "{MMAR_EVAL_OUTPUT_PATH}",
+            "output_postfix": "seg",
+            "output_dtype": "uint8",
+            "resample": false,
+            "squeeze_end_dims": true,
+            "data_root_dir": "{data_root_dir}",
+            "separate_folder": false
+        }
+    },
+    {
+	  "name": "AsDiscreted",
+	  "args": {
+	     "keys": ["pred", "label"],
+             "to_onehot": ["{label_onehot}", "{label_onehot}"]
+	  }
+    }
+  ]
+}

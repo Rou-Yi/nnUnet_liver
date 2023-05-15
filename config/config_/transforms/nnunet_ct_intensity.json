@@ -1,0 +1,14 @@
+{
+"pre_transforms": [
+    {
+       "path": "transforms.nnunet_intensity_normalize.NormalizeIntensityRanged",
+       "args": {
+            "keys": "image",
+            "a_min": "{a_min}",
+            "a_max": "{a_max}",
+            "subtrahend": "{mean_intensity}",
+            "divisor": "{std_intensity}"
+       }
+    }
+]
+}

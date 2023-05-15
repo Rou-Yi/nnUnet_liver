@@ -1,0 +1,266 @@
+{
+  "train_pre_transforms": [
+      {
+        "name": "LoadImaged",
+        "args": {
+          "keys": "@pre_transforms_keys"
+        }
+      },
+      {
+        "name": "EnsureChannelFirstd",
+        "args": {
+            "keys": "@pre_transforms_keys"
+        }
+      },
+      {
+        "name": "Orientationd",
+        "args": {
+            "keys": "@pre_transforms_keys",
+            "as_closest_canonical": true
+        }
+      },
+      {
+        "name": "Spacingd",
+        "args": {
+            "keys": "@pre_transforms_keys",
+            "pixdim": [1.0, 1.0, 1.0],
+            "mode": "@spacingd_modes"
+        }
+      },
+      {
+        "path": "transforms.check_label_not_0.CheckLabelNot0d",
+        "args": {
+          "keys": "@pre_transforms_keys"
+        }
+      },
+      {
+        "path": "transforms.concat_image_label_extra_key.ConcatImageLabelExtraKeyd",
+        "args": {
+            "image_keys": "@image_keys",
+            "label_keys": "@label_keys",
+            "extra_keys": "@extra_keys"
+        }
+      },
+      {
+        "name": "ThresholdIntensityd",
+        "args": {
+            "keys": "label",
+            "threshold": "{intensity_threshold}",
+            "above": false,
+            "cval": "{intensity_threshold}"
+        }
+      },
+      {
+        "path": "transforms.labels_asdiscrete.LabelAsDiscreted",
+        "args": {
+            "keys": "label"
+        }
+      },
+      {
+        "name": "NormalizeIntensityd",
+        "args": {
+          "keys": "image",
+	        "nonzero": true,
+          "channel_wise": true
+        }
+      },
+      {
+        "name": "CopyItemsd",
+        "args": {
+          "keys": "label",
+          "times": 1,
+          "names": "extra"
+        }
+      },
+      {
+        "name": "AsDiscreted",
+        "args": {
+          "keys": "extra",
+          "to_onehot": "{label_onehot}"
+        }
+      },
+      {
+        "path": "transforms.dist_map_transform.OneHot2Dist",
+        "args": {
+          "keys": "extra"
+        }
+      },
+      {
+        "name": "SelectItemsd",
+        "args": {
+            "keys": "@pre_transforms_after_concat_keys_with_extra"
+        }
+      },
+      {
+        "name": "RandCropByPosNegLabeld",
+        "args": {
+            "keys": "@pre_transforms_after_concat_keys_with_extra",
+            "label_key": "label",
+            "spatial_size": ["{x_size}", "{y_size}", "{z_size}"],
+            "num_samples": "{num_samples}",
+            "allow_smaller": true
+        }
+      },
+      {
+        "name": "ResizeWithPadOrCropd",
+        "args": {
+            "keys": "@pre_transforms_after_concat_keys_with_extra",
+            "spatial_size": ["{x_size}", "{y_size}", "{z_size}"]
+        }
+      },
+      {
+        "name": "RandFlipd",
+        "args": {
+          "keys": "@pre_transforms_after_concat_keys_with_extra",
+          "prob": 0.7,
+          "spatial_axis": 0
+        }
+      },
+      {
+        "name": "RandFlipd",
+        "args": {
+          "keys": "@pre_transforms_after_concat_keys_with_extra",
+          "prob": 0.7,
+          "spatial_axis": 1
+        }
+      },
+      {
+        "name": "RandRotate90d",
+        "args": {
+          "keys": "@pre_transforms_after_concat_keys_with_extra",
+          "prob": 0.5
+        }
+      },
+      {
+        "name": "RandScaleIntensityd",
+        "args": {
+          "keys": "image",
+          "prob": 1.0,
+          "factors": 0.1
+        }
+      },
+      {
+        "name": "RandShiftIntensityd",
+        "args": {
+              "keys": "image",
+          "prob": 1.0,
+          "offsets": 0.1
+        }
+      },
+      {
+        "name": "EnsureTyped",
+        "args": {
+          "keys": "@pre_transforms_after_concat_keys_with_extra"
+        }
+      }
+    ],
+  "val_pre_transforms": [
+      {
+        "ref": "LoadImaged"
+      },
+      {
+	      "ref": "EnsureChannelFirstd"
+      },
+      {
+	      "ref": "Orientationd"
+      },
+      {
+        "ref": "Spacingd"
+      },
+      {
+	      "ref": "transforms.check_label_not_0.CheckLabelNot0d"
+      },
+      {
+        "ref": "transforms.concat_image_label_extra_key.ConcatImageLabelExtraKeyd"
+      },
+      {
+        "ref": "ThresholdIntensityd"
+      },
+      {
+        "ref": "transforms.labels_asdiscrete.LabelAsDiscreted"
+      },
+      {
+        "ref": "NormalizeIntensityd"
+      },
+      {
+        "name": "EnsureTyped",
+        "args": {
+          "keys": "@pre_transforms_after_concat_keys"
+        }
+      }
+    ],
+  "test_pre_transforms": [
+    {
+      "name": "LoadImaged",
+      "args": {
+        "keys": "@pre_transforms_keys"
+      }
+    },
+    {
+      "name": "EnsureChannelFirstd",
+      "args": {
+        "keys": "@pre_transforms_keys"
+      }
+    },
+    {
+      "name": "Orientationd",
+      "args": {
+        "keys": "@pre_transforms_keys",
+        "as_closest_canonical": true
+      }
+    },
+    {
+      "name": "Spacingd",
+      "args": {
+         "keys": "@pre_transforms_keys",
+         "pixdim": [1.0, 1.0, 1.0],
+         "mode": "@spacingd_modes"
+      }
+    },
+    {
+      "path": "transforms.check_label_not_0.CheckLabelNot0d",
+      "args": {
+        "keys": "@pre_transforms_keys"
+      }
+    },
+    {
+      "path": "transforms.concat_image_label_extra_key.ConcatImageLabelExtraKeyd",
+      "args": {
+          "image_keys": "@image_keys",
+          "label_keys": "@label_keys",
+          "extra_keys": "@extra_keys"
+      }
+    },
+    {
+      "name": "ThresholdIntensityd",
+      "args": {
+          "keys": "label",
+          "threshold": "{intensity_threshold}",
+          "above": false,
+          "cval": "{intensity_threshold}"
+      }
+    },
+    {
+      "path": "transforms.labels_asdiscrete.LabelAsDiscreted",
+      "args": {
+          "keys": "label"
+      }
+    },
+    {
+      "name": "NormalizeIntensityd",
+      "args": {
+        "keys": [
+          "image"
+        ],
+        "nonzero": true,
+        "channel_wise": true
+      }
+    },
+    {
+      "name": "EnsureTyped",
+      "args": {
+        "keys": "@pre_transforms_after_concat_keys"
+      }
+    }
+  ]
+}

@@ -1,0 +1,373 @@
+{
+    "train_post_transforms": [
+      {
+	  "name": "EnsureTyped",
+	  "args": {
+	     "keys": [
+		   "pred"
+	     ]
+	  }
+      },
+      {
+        "name": "Activationsd",
+        "args": {
+            "keys": "pred",
+            "sigmoid": "{to_sigmoid}",
+	    "softmax": "{to_softmax}"
+        }
+      },
+     {
+	  "name": "AsDiscreted",
+	  "args": {
+	     "keys": ["pred", "label"],
+	     "argmax": [false, false],
+             "to_onehot": [null, "{label_onehot}"],
+             "threshold": [0.5, null]
+	  }
+      },
+      {
+        "name": "SplitDimd",
+        "args": {
+          "keys": [
+            "pred",
+            "label"
+          ],
+          "output_postfixes": "@split_postfixes"
+        }
+      }
+    ],
+"val_post_transforms": [
+      {
+	  "name": "EnsureTyped",
+	  "args": {
+	     "keys": [
+		   "pred"
+	     ]
+	  }
+      },
+      {
+	  "name": "CopyItemsd",
+	  "args": {
+	     "keys": "pred",
+	     "times": 1,
+	     "names": "pred_for_val_loss"
+	  }
+      },
+      {
+        "name": "Activationsd",
+        "args": {
+            "keys": "pred",
+            "sigmoid": "{to_sigmoid}",
+	    "softmax": "{to_softmax}"
+        }
+      },
+     {
+	  "name": "AsDiscreted",
+	  "args": {
+	     "keys": ["pred", "label"],
+	     "argmax": [false, false],
+             "to_onehot": [null, "{label_onehot}"],
+             "threshold": [0.5, null]
+	  }
+      },
+      {
+        "name": "SplitDimd",
+        "args": {
+          "keys": [
+            "pred",
+            "label"
+          ],
+          "output_postfixes": "@split_postfixes"
+        }
+      }
+    ],
+    "test_post_transforms": [
+     {
+	  "name": "EnsureTyped",
+	  "args": {
+	     "keys": [
+		   "pred"
+	     ]
+	  }
+      },
+      {
+        "name": "Activationsd",
+        "args": {
+            "keys": "pred",
+            "sigmoid": "{to_sigmoid}",
+	        "softmax": "{to_softmax}"
+        }
+      },
+      {
+      "path": "transforms.corrected_invertd.Invertd",
+      "args": {
+        "keys": [
+          "pred"
+        ],
+        "transform": "@pre_transforms",
+        "orig_keys": "@first_image_key",
+        "meta_keys": [
+          "pred_meta_dict"
+        ],
+        "nearest_interp": false,
+        "to_tensor": true,
+        "device": "cuda"
+      }
+    },
+        {
+      "path": "transforms.corrected_invertd.Invertd",
+      "disabled": "{no_label}",
+      "args": {
+        "keys": [
+            "label"
+        ],
+        "transform": "@pre_transforms",
+        "orig_keys": [
+		"label"
+	],
+        "meta_keys": [
+            "pre_label_meta_dict"
+        ],
+	"orig_meta_keys": [
+		"label_meta_dict"
+	],
+        "nearest_interp": false,
+        "to_tensor": true,
+        "device": "cuda"
+      }
+    },
+    {
+	  "name": "AsDiscreted",
+	  "args": {
+	     "keys": ["pred"],
+	     "argmax": [false],
+             "threshold": [0.5]
+	  }
+    },
+        {
+	  "name": "AsDiscreted",
+          "disabled": "{no_label}",
+	  "args": {
+	     "keys": ["label"],
+	     "argmax": [false],
+             "threshold": [null]
+	  }
+    },
+        {
+       "name": "CopyItemsd",
+       "args": {
+          "keys": "pred",
+          "names": [
+                "pred_fn",
+                "pred_fp",
+                "output_pred"
+                ],
+          "times": 3
+        }
+    },
+    {
+       "path": "transforms.fp_fn_tumors.FpFnTumors",
+       "disabled": "{no_label}",
+       "args": {
+            "keys": "pred_fp",
+            "other_keys": "label",
+	        "to_onehot": "{out_channels1}",
+            "fp_or_fn": "fp"
+        }
+    },
+    {
+       "path": "transforms.fp_fn_tumors.FpFnTumors",
+       "disabled": "{no_label}",
+       "args": {
+            "keys": "pred_fn",
+            "other_keys": "label",
+	        "to_onehot": "{out_channels1}",
+            "fp_or_fn": "fn"
+        }
+    },
+    {
+       "name": "CopyItemsd",
+       "args": {
+          "keys": [
+                "pred"
+          ],
+          "names": [
+                "pred_detail"
+                ],
+          "times": 1
+        }
+    },
+    {
+       "name": "CopyItemsd",
+       "disabled": "{no_label}",
+       "args": {
+          "keys": [
+                "label"
+          ],
+          "names": [
+                "label_detail"
+                ],
+          "times": 1
+        }
+    },
+    {
+       "path": "transforms.fp_fn_tumors_detailed.FpFnTumors",
+       "disabled": "{no_label}",
+       "args": {
+            "keys": "pred_detail",
+            "other_keys": "label_detail",
+	        "to_onehot": "{out_channels1}"
+        }
+    },
+    {
+	  "name": "AsDiscreted",
+	  "args": {
+	     "keys": ["output_pred", "pred_detail", "pred_fp", "pred_fn"],
+	     "argmax": [true, true, true, true]
+        }
+    },
+    {
+	  "name": "AsDiscreted",
+          "disabled": "{no_label}",
+	  "args": {
+	     "keys": ["label_detail"],
+	     "argmax": [true]
+        }
+    },
+    {
+       "path": "transforms.relpath_saveimaged.RelPathSaveImaged",
+       "disabled": "{dont_save_segmentation}",
+        "args": {
+            "keys": [
+                "pred_detail"
+                ],
+            "image_key": "image",
+            "rel_path": "rel",
+            "meta_keys": [
+                "pred_meta_dict"
+                ],
+            "output_dir": "{MMAR_EVAL_OUTPUT_PATH}",
+            "output_postfix": "seg_detail",
+            "output_dtype": "uint8",
+            "resample": false,
+            "squeeze_end_dims": true,
+            "data_root_dir": "{data_root_dir}",
+            "separate_folder": false
+        }
+    },
+    {
+       "path": "transforms.relpath_saveimaged.RelPathSaveImaged",
+       "disabled": "{dont_save_segmentation_or_no_label}",
+        "args": {
+            "keys": [
+                "label_detail"
+                ],
+            "image_key": "image",
+            "rel_path": "rel",
+            "meta_keys": [
+                "label_meta_dict"
+                ],
+            "output_dir": "{MMAR_EVAL_OUTPUT_PATH}",
+            "output_postfix": "label_detail",
+            "output_dtype": "uint8",
+            "resample": false,
+            "squeeze_end_dims": true,
+            "data_root_dir": "{data_root_dir}",
+            "separate_folder": false
+        }
+    },
+    {
+       "path": "transforms.relpath_saveimaged.RelPathSaveImaged",
+       "disabled": "{dont_save_segmentation}",
+        "args": {
+            "keys": [
+                "pred_fn"
+                ],
+            "image_key": "image",
+            "rel_path": "rel",
+            "meta_keys": [
+                "pred_meta_dict"
+                ],
+            "output_dir": "{MMAR_EVAL_OUTPUT_PATH}",
+            "output_postfix": "seg_fn",
+            "output_dtype": "uint8",
+            "resample": false,
+            "squeeze_end_dims": true,
+            "data_root_dir": "{data_root_dir}",
+            "separate_folder": false
+        }
+    },
+    {
+       "path": "transforms.relpath_saveimaged.RelPathSaveImaged",
+       "disabled": "{dont_save_segmentation}",
+        "args": {
+            "keys": [
+                "pred_fp"
+                ],
+            "image_key": "image",
+            "rel_path": "rel",
+            "meta_keys": [
+                "pred_meta_dict"
+                ],
+            "output_dir": "{MMAR_EVAL_OUTPUT_PATH}",
+            "output_postfix": "seg_fp",
+            "output_dtype": "uint8",
+            "resample": false,
+            "squeeze_end_dims": true,
+            "data_root_dir": "{data_root_dir}",
+            "separate_folder": false
+        }
+    },
+    {
+       "path": "transforms.relpath_saveimaged.RelPathSaveImaged",
+       "disabled": "{dont_save_segmentation}",
+        "args": {
+            "keys": [
+                "output_pred"
+                ],
+            "image_key": "image",
+            "rel_path": "rel",
+            "meta_keys": [
+                "pred_meta_dict"
+                ],
+            "output_dir": "{MMAR_EVAL_OUTPUT_PATH}",
+            "output_postfix": "seg",
+            "output_dtype": "uint8",
+            "resample": false,
+            "squeeze_end_dims": true,
+            "data_root_dir": "{data_root_dir}",
+            "separate_folder": false
+        }
+    },
+    {
+      "name": "AsDiscreted",
+      "args": {
+	        "keys": ["pred"],
+          "to_onehot": [null]
+	  }
+    },
+    {
+	    "name": "AsDiscreted",
+      "disabled": "{no_label}",
+	    "args": {
+	        "keys": ["label"],
+          "to_onehot": ["{label_onehot}"]
+	  }
+    },
+    {
+      "name": "Orientationd",
+      "args": {
+          "keys": ["pred"],
+          "as_closest_canonical": true
+      }
+    },
+    {
+      "name": "Orientationd",
+      "disabled": "{no_label}",
+      "args": {
+          "keys": ["label"],
+          "as_closest_canonical": true
+      }
+    }
+  ]
+}
